@@ -71,11 +71,14 @@ int main(void)
 	
 	system_init();
 	
+	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE);	// necessária ???
+	
 	adc_configure();
 	
 	adc_start_conversion(&adc_instance);
 	
-
+	load_calibration_data();	// necessária ???
+	
 	 /*
 	 *	Espera até que conversão seja feita e Resultado salvo em tempetaura
 	 */
