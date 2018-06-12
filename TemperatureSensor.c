@@ -83,9 +83,9 @@ int main(void)
 	
 	/* Testa se é possivel modificar valor da variável */ 
 	twotf = tf * 2;
+	
 	/* Conversão da temperatura para Celcius */
 	temp = calculate_temperature(tf);
-	printf("\nThe current temperature is = %f degree Celsius", temp);
 	
 	while (1) {}
 }
