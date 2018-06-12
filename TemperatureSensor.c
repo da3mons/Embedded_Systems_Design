@@ -6,6 +6,7 @@ uint16_t adc_reader(uint8_t adc_num, uint8_t adc_chan);
 
 uint16_t tf;	// Recebe a temperatura final
 uint16_t twotf; // teste
+float temp;	// Recebe temperatura convertida para Celcius
 
 struct adc_module adc_instance;	/* Estrutura para ADC*/
 
@@ -43,6 +44,27 @@ void adc_configure(void) {
 	adc_enable(&adc_instance);	// Habilita o módulo ADC
 }
 
+float calculate_temperature(uint16_t raw_code)
+{
+ float VADC; /* Voltage calculation using ADC result for Coarse Temp calculation */
+ float VADCM; /* Voltage calculation using ADC result for Fine Temp calculation. */
+ float INT1VM; /* Voltage calculation for reality INT1V value during the ADC conversion */
+
+ VADC = ((float)raw_code * INT1V_VALUE_FLOAT)/ADC_12BIT_FULL_SCALE_VALUE_FLOAT;
+
+ /* Coarse Temp Calculation by assume INT1V=1V for this ADC conversion */
+ coarse_temp = tempR + (((tempH - tempR)/(VADCH - VADCR)) * (VADC - VADCR));
+
+ /* Calculation to find the real INT1V value during the ADC conversion */
+ INT1VM = INT1VR + (((INT1VH - INT1VR) * (coarse_temp - tempR))/(tempH - tempR));
+
+ VADCM = ((float)raw_code * INT1VM)/ADC_12BIT_FULL_SCALE_VALUE_FLOAT;
+
+ /* Fine Temp Calculation by replace INT1V=1V by INT1V = INT1Vm for ADC conversion */
+ fine_temp = tempR + (((tempH - tempR)/(VADCH - VADCR)) * (VADCM - VADCR));
+
+ return fine_temp;
+}
 
 int main(void)
 {
@@ -59,8 +81,11 @@ int main(void)
 	 */
 	 while (adc_read(&adc_instance, &tf) == STATUS_BUSY){}
 	
-	/* Testa Valor */ 
+	/* Testa se é possivel modificar valor da variável */ 
 	twotf = tf * 2;
+	/* Conversão da temperatura para Celcius */
+	temp = calculate_temperature(tf);
+	printf("\nThe current temperature is = %f degree Celsius", temp);
 	
-	 while (1) {}
+	while (1) {}
 }
