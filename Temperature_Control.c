@@ -63,3 +63,58 @@ PT_THREAD(receiver(struct pt *pt))
 		}
 	PT_END(pt);
 }
+	
+/* Configuração da memória (paginação) */
+void configure_eeprom(void)
+{
+	/* Setup EEPROM emulator service */
+	enum status_code error_code = eeprom_emulator_init();
+
+	if (error_code == STATUS_ERR_NO_MEMORY) {
+		while (true) {
+			/* No EEPROM section has been set in the device's fuses */
+		}
+	}
+	else if (error_code != STATUS_OK) {
+		/* Erase the emulated EEPROM memory (assume it is unformatted or
+		 * irrecoverably corrupt) */
+		printf("Memory error!!!\n");
+		eeprom_emulator_erase_memory();
+		eeprom_emulator_init();
+	}
+}
+
+/* Temperatura menor ou igual a 15°C */
+void temp_low()
+{
+	gfx_mono_init();
+	gfx_mono_draw_string("Temp. Ambiente:", 1, 7, &sysfont);
+	gfx_mono_draw_string(aux, 93, 7, &sysfont);
+	gfx_mono_draw_string(" C", 105, 7, &sysfont);
+	gfx_mono_draw_string("Ar Condicionado:", 1, 20, &sysfont);
+	gfx_mono_draw_string("23 C", 100, 20, &sysfont);
+}
+
+/* Temperatura maior ou igual a 26ºC */
+void temp_high()
+{
+	gfx_mono_init();
+	gfx_mono_draw_string("Temp. Ambiente:", 1, 7, &sysfont);
+	gfx_mono_draw_string(aux, 93, 7, &sysfont);
+	gfx_mono_draw_string(" C", 105, 7, &sysfont);
+	gfx_mono_draw_string("Ar Condicionado:", 1, 20, &sysfont);
+	gfx_mono_draw_string("20 C", 100, 20, &sysfont);
+}
+
+/* Temperatura padrão (entre 15ºC e 26ºC) */
+void temp_default()
+{
+	gfx_mono_init();
+	gfx_mono_draw_string("Ar Condicionado", 15, 4, &sysfont);
+	gfx_mono_draw_string("Desligado", 32, 14, &sysfont);
+	gfx_mono_draw_string("Temp. Ambiente:", 0, 24, &sysfont);
+	gfx_mono_draw_string(aux, 93, 25, &sysfont);
+	gfx_mono_draw_string("C", 107, 25, &sysfont);
+}
+
+		
