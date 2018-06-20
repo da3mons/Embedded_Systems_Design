@@ -52,9 +52,8 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-// From module: ADC - Analog-to-Digital Converter (Callback APIs)
+// From module: ADC - Analog-to-Digital Converter (Polled APIs)
 #include <adc.h>
-#include <adc_callback.h>
 
 // From module: AT30TSE75X Temperature Sensor
 #include <at30tse75x.h>
@@ -63,11 +62,26 @@
 #include <compiler.h>
 #include <status_codes.h>
 
+// From module: Delay routines
+#include <delay.h>
+
+// From module: EEPROM Emulator Service
+#include <eeprom.h>
+
+// From module: GFX Monochrome - Monochrome Graphic Library
+#include <gfx_mono.h>
+
+// From module: GFX Monochrome - System Font
+#include <sysfont.h>
+
 // From module: Generic board support
 #include <board.h>
 
 // From module: Interrupt management - SAM implementation
 #include <interrupt.h>
+
+// From module: NVM - Non-Volatile Memory
+#include <nvm.h>
 
 // From module: PORT - GPIO Pin Control
 #include <port.h>
@@ -84,9 +98,18 @@
 #include <i2c_master.h>
 #include <i2c_master_interrupt.h>
 
+// From module: SERCOM Polled API
+#include <sercom.h>
+
 // From module: SERCOM SPI - Serial Peripheral Interface (Callback APIs)
 #include <spi.h>
 #include <spi_interrupt.h>
+
+// From module: SERCOM USART - Serial Communications (Polled APIs)
+#include <usart.h>
+
+// From module: SSD1306 OLED controller
+#include <ssd1306.h>
 
 // From module: SYSTEM - Clock Management for SAMD21/R21/DA/HA
 #include <clock.h>
@@ -106,5 +129,11 @@
 
 // From module: SYSTEM - Reset Management for SAM D20/D21/R21/D09/D10/D11/DA/HA
 #include <reset.h>
+
+// From module: Standard serial I/O (stdio)
+#include <stdio_serial.h>
+
+// From module: USART - Serial interface- SAM implementation for devices with only USART
+#include <serial.h>
 
 #endif // ASF_H
