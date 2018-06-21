@@ -120,13 +120,13 @@ void temp_default()
 int main(void){
 
 	system_init();
-		/* Configura��es das fun��es */
+		/* Configurações das funções */
 		gfx_mono_init();							/*Configura displays */
 		usart_get_config_defaults(&usart_conf);		/* Configura USART como default para leitura dos pinos */
-		stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &usart_conf);		/* Inicia comunica��o com o Perif�rico de Temperatura */
+		stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &usart_conf);		/* Inicia comunicação com o Periférico de Temperatura */
 		usart_enable(&usart_instance);		/* Habilita USART */
-		at30tse_init();						/* Inicia Perif�rico, j� configurado para medi��o de temperatura */
-		configure_eeprom();					/* Configura mem�ria */
+		at30tse_init();						/* Inicia Periférico, já configurado para medição de temperatura */
+		configure_eeprom();					/* Configura memória */
 	
 	int i, i_vec;
 	i_vec = 0;
