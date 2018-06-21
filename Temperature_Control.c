@@ -117,4 +117,49 @@ void temp_default()
 	gfx_mono_draw_string("C", 107, 25, &sysfont);
 }
 
-		
+int main(void){
+
+	system_init();
+		/* Configura��es das fun��es */
+		gfx_mono_init();							/*Configura displays */
+		usart_get_config_defaults(&usart_conf);		/* Configura USART como default para leitura dos pinos */
+		stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &usart_conf);		/* Inicia comunica��o com o Perif�rico de Temperatura */
+		usart_enable(&usart_instance);		/* Habilita USART */
+		at30tse_init();						/* Inicia Perif�rico, j� configurado para medi��o de temperatura */
+		configure_eeprom();					/* Configura mem�ria */
+	
+	int i, i_vec;
+	i_vec = 0;
+	ack = 0;
+	set = 0;	
+	
+	/* Inicia Threads */
+	PT_INIT(&pt_sender);
+	PT_INIT(&pt_receiver);
+	
+	
+	while(1)
+	{	
+		if (i_vec == N){ 		/* Se já atingiu o numero de amostras */
+				final_temp = 0;
+				i_vec = 0;
+				for(i = 0; i < N; ++i){			/* Efetua a média das amostras */
+					final_temp += vec_temp[i];
+				}
+				final_temp = final_temp / N;
+				itoa((int)final_temp, temp_lida, 10);		/* Conversão para caractere */
+				eeprom_emulator_write_page(0, temp_lida);	/* Salva na memória */
+				eeprom_emulator_commit_page_buffer();
+				ack = 1;	/* Atualiza flag para as threads */
+				
+			}else{
+				sender(&pt_sender);
+				receiver(&pt_receiver);
+					
+				temp_res = at30tse_read_temperature();	/* Lê sensor de temperatura */
+				for(i=0;i<1000000;i++);			/* Tempo de espera até obter próxima amostra */
+				vec_temp[i_vec] = temp_res;
+				i_vec++;
+			}
+	}		
+}
